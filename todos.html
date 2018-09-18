@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div class="page-top">
+        <div class="page-content">
+            <h2>任务计划列表</h2>
+        </div>
+    </div>
+    <div class="main">
+        <h3 class="big-title">添加任务：</h3>
+        <input 
+            placeholder="例如：吃饭睡觉打豆豆；    提示：+回车即可添加任务" 
+            class="task-input" 
+            type="text"
+            @keyup.enter = "addTodo"
+            v-model="val"
+        />
+        <ul class="task-count">
+            <li v-show="list.length">{{unCompeleteNum}}个任务未完成</li>
+            <li class="action" v-show="list.length">
+                <a class="active" href="#all" >所有任务</a>
+                <a href="#unfinished">未完成的任务</a>
+                <a href="#finished">完成的任务</a>
+            </li>
+        </ul>
+        <h3 class="big-title">任务列表：</h3>
+        <div class="tasks">
+            <span class="no-task-tip" v-show="!list.length">还没有添加任何任务</span>
+            <ul class="todo-list">
+                <!-- 这里的li不再循环list，而是根据hash值来循环筛选后的list -->
+                <li class="todo" 
+                v-for="item,index in filteredList"
+                :class="{completed:item.isChecked,editing:editor === item}"
+                >
+                    <div class="view">
+                        <input class="toggle" type="checkbox" v-model="item.isChecked"/>
+                        <label @dblclick="reEdit(item)">{{item.title}}</label>
+                        <button class="destroy" @click="removeTodo(index)"></button>
+                    </div>
+                    <input 
+                        class="edit" 
+                        type="text" 
+                        v-focus="editor === item"
+                        v-model="item.title"
+                        @blur="changeTitle(item)"
+                        @keyup.enter="changeTitle(item)"
+                        @keyup.esc="cancleChange(item)"
+                    />
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="./app2.js"></script>
+</body>
+</html>
